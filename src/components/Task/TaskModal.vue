@@ -68,6 +68,9 @@ const addNewTask = () => {
     priority: taskPriority.value,
     isDone: false
   });
+  taskText.value = '';
+  taskDueDateTime.value = '';
+  taskPriority.value = '';
 }
 </script>
 

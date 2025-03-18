@@ -16,10 +16,25 @@ import { useRoute } from 'vue-router';
 import TaskModal from './TaskModal.vue';
 import TaskItem from './TaskItem.vue';
 import { taskStore } from '@/stores/taskStore';
+import { settingsStore } from '@/stores/settingsStore';
 
 const filteredTasks = computed(() => {
   console.log('searching ==> ', querySearch.value);
-  return querySearch.value && taskStore.tasks.value.length > 0 ? taskStore.getByState(querySearch.value) : []
+  let tasks = taskStore.getByState(querySearch.value) || [];
+
+  switch (settingsStore.sortBy.value) {
+    case 'priority':
+      return tasks.sort((a, b) => {
+        const priorityOrder = { high: 0, medium: 1, low: 2 };
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      });
+    case 'due':
+      return tasks.sort((a, b) => new Date(a.due) - new Date(b.due));
+    case 'name':
+      return tasks.sort((a, b) => a.text.localeCompare(b.text));
+    default:
+      return tasks;
+  }
 });
 
 const route = useRoute();
@@ -29,7 +44,6 @@ watch(
   () => route.query.state,
   (newState, oldState) => {
     querySearch.value = newState;
-    filteredTasks.value = taskStore.getByState(querySearch.value);
     console.log(`watching router: New (${newState}), Old (${oldState})`);
   }
 );

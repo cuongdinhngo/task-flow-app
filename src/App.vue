@@ -24,23 +24,10 @@ const expandedSettings = ref({
   priorityColors: false
 });
 provide('expandedSettings', expandedSettings);
-
-const isDarkMode = ref(settingsStore.darkMode.value);
-
-onMounted(() => document.body.classList.toggle('dark-mode', isDarkMode.value));
-
-watch(
-  () => settingsStore.darkMode.value,
-  () => {
-    console.log('isDarkMode is updating ...', settingsStore.darkMode.value);
-    isDarkMode.value = settingsStore.darkMode.value;
-  }
-);
-
 </script>
 
 <template>
-  <div :class="{ 'dark-mode': isDarkMode }">
+  <div>
     <Header />
     <Nav />
     <main>

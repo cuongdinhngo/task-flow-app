@@ -9,14 +9,34 @@ const defaultColors = {
 export const settingsStore = {
   darkMode: ref(false),
   priorityColors: ref(null),
-  sortBy: ref('prioriy'),
+  sortBy: ref('priority'),
 
   init() {
     const storedPriorityColors = localStorage.getItem('priorityColors');
-    this.priorityColors.value = storedPriorityColors ? JSON.parse(storedPriorityColors) : defaultColors; 
+    this.priorityColors.value = storedPriorityColors ? JSON.parse(storedPriorityColors) : defaultColors;
+
     const storedDarkMode = localStorage.getItem('darkMode');
-    this.darkMode.value = storedDarkMode ? JSON.parse(storedDarkMode) : false;
-    console.log('init darkMode =', this.darkMode.value);
+    this.darkMode.value = Boolean(JSON.parse(storedDarkMode)) || false;
+
+    const storedSortBy = localStorage.getItem('sortBy');
+    this.sortBy.value = storedSortBy || 'priority';
+
+    console.log('Init DarkMode:', this.darkMode.value);
+    this.applyDarkMode();
+  },
+
+  applyDarkMode() {
+    if (this.darkMode.value === true) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  },
+
+  toggleDarkMode() {
+    console.log('Before toggle, Current DarkMode ===', this.darkMode.value);
+    console.log('After toggle, New DarkMode ===', this.darkMode.value);
+    this.applyDarkMode();
   },
 
   saveLocalStorage(type) {
@@ -25,12 +45,18 @@ export const settingsStore = {
     switch(type) {
       case 'priorityColors':
         data = JSON.stringify(this.priorityColors.value);
+        break;
       case 'darkMode':
-        data = JSON.stringify(this.darkMode.value)
-        console.log(data);
+        data = this.darkMode.value;
+        break;
+      case 'sortBy':
+        data = this.sortBy.value;
+        break;
     }
 
-    localStorage.setItem(type, data)
+    if (data !== null) {
+      localStorage.setItem(type, data);
+    }
   }
 };
 
@@ -47,13 +73,19 @@ watch(
   { deep: true}
 );
 
-let timeoutDarkMode = null;
 watch(
   () => settingsStore.darkMode.value,
   () => {
-    if (timeoutDarkMode) clearTimeout(timeoutDarkMode);
-    timeoutDarkMode = setTimeout(() => settingsStore.saveLocalStorage('darkMode'), 500);
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => settingsStore.saveLocalStorage('darkMode'), 500);
     console.log('darkMode stored');
-  },
-  { deep: true}
+  }
+);
+
+watch(
+  () => settingsStore.sortBy.value,
+  () => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => settingsStore.saveLocalStorage('sortBy'), 500);
+  }
 );
