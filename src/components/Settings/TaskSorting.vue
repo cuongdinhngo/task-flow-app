@@ -1,15 +1,15 @@
 <template>
   <div v-show="expandedSettings.sortBy" class="setting-details">
     <label>
-      <input type="radio" v-model="settingsStore.sortBy" value="priority" name="sortBy" @change="updateSortBy" :checked="settingsStore.sortBy"/>
+      <input type="radio" v-model="settingsStore.sortBy.value" value="priority" name="sortBy" @click="settingsStore.updateSortBy('priority')"/>
       Sort by Priority
     </label>
     <label>
-      <input type="radio" v-model="settingsStore.sortBy" value="due" name="sortBy" @change="updateSortBy" :checked="settingsStore.sortBy"/>
+      <input type="radio" v-model="settingsStore.sortBy.value" value="due" name="sortBy" @click="settingsStore.updateSortBy('due')"/>
       Sort by Due Date
     </label>
     <label>
-      <input type="radio" v-model="settingsStore.sortBy" value="name" name="sortBy" @change="updateSortBy" :checked="settingsStore.sortBy"/>
+      <input type="radio" v-model="settingsStore.sortBy.value" value="name" name="sortBy" @click="settingsStore.updateSortBy('name')"/>
       Sort by Name
     </label>
   </div>

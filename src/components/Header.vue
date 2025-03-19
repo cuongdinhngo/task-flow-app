@@ -1,7 +1,7 @@
 <template>
   <header>
     <h1>TaskFlow</h1>
-    <button class="mode-toggle" @click="openSettings"><i class="fas fa-cog"></i></button>
+    <button class="mode-toggle" @click="openSettings"><font-awesome-icon icon="fa-cog"/></button>
   </header>
 
   <Settings />

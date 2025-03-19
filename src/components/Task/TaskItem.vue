@@ -1,6 +1,9 @@
 <template>
   <div :class="['task', task.priority]">
-    <label :class="{isDone: props.task.isDone}">{{ task.text }}<span>Due {{ task.due }}</span></label>
+    <label :class="{isDone: props.task.isDone}">
+      {{ task.text }} <font-awesome-icon v-if="task.isOverdue" icon="fire" class="overdue"/>
+      <span>Due {{ task.due.replace("T", " at ") }}</span>
+    </label>
     <input type="checkbox" id="task1" class="toggle-switch" @input="toggleDone" :checked="props.task.isDone"/>
   </div>
 </template>
@@ -44,6 +47,21 @@ watch(
 </script>
 
 <style scoped>
+.overdue {
+  margin-left: 10px;
+  color: #7c7c7c;
+  animation-name: house-fire;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes house-fire {
+  from {color: #ffffff;}
+  to {color: #f90000;}
+}
+
 .task.high::before {
   background: var(--high-color, #ff0000);
 }

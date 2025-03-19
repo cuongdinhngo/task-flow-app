@@ -1,8 +1,7 @@
 <script setup>
-import { ref, provide, computed, watch, onMounted } from 'vue';
+import { ref, provide } from 'vue';
 import Header from './components/Header.vue';
 import Nav from './components/Nav.vue';
-import { settingsStore } from './stores/settingsStore';
 
 const showSettings = ref(false);
 provide('showSettings', showSettings);

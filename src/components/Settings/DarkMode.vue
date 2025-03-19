@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { inject, ref, watch } from 'vue';
+import { inject } from 'vue';
 import { settingsStore } from '@/stores/settingsStore';
 
 const expandedSettings = inject('expandedSettings');

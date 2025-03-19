@@ -9,7 +9,7 @@ const defaultColors = {
 export const settingsStore = {
   darkMode: ref(false),
   priorityColors: ref(null),
-  sortBy: ref('priority'),
+  sortBy: ref(''),
 
   init() {
     const storedPriorityColors = localStorage.getItem('priorityColors');
@@ -21,7 +21,6 @@ export const settingsStore = {
     const storedSortBy = localStorage.getItem('sortBy');
     this.sortBy.value = storedSortBy || 'priority';
 
-    console.log('Init DarkMode:', this.darkMode.value);
     this.applyDarkMode();
   },
 
@@ -39,6 +38,14 @@ export const settingsStore = {
     this.applyDarkMode();
   },
 
+  updateSortBy(type) {
+    console.log(`${this.sortBy.value} -> ${type}`, typeof type);
+    console.log(`Old sortBy = ${this.sortBy.value}`);
+    this.sortBy.value = type;
+    console.log(`New sortBy = ${this.sortBy.value}`);
+    console.log('===>>>', this.sortBy.value);
+  },
+
   saveLocalStorage(type) {
     let data = null;
     console.log('save local storage ->', type)
@@ -50,6 +57,7 @@ export const settingsStore = {
         data = this.darkMode.value;
         break;
       case 'sortBy':
+        console.log(`sortBy -> localStorage -> ${this.sortBy.value}`);
         data = this.sortBy.value;
         break;
     }
@@ -84,7 +92,8 @@ watch(
 
 watch(
   () => settingsStore.sortBy.value,
-  () => {
+  (oldValue, newValue) => {
+    console.log('Watcher - sortBy changed from', oldValue, 'to', newValue);
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => settingsStore.saveLocalStorage('sortBy'), 500);
   }

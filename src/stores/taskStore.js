@@ -5,7 +5,19 @@ export const taskStore = {
 
   init() {
     const storedTasks = localStorage.getItem('tasks');
-    this.tasks.value = storedTasks ? JSON.parse(storedTasks) : [];
+    const verifiedTasks = storedTasks ? JSON.parse(storedTasks) : [];
+    this.tasks.value = this.enrich(verifiedTasks);
+  },
+
+  enrich(items) {
+    const currentDate = new Date();
+
+    return items.map(item => {
+      const dueDate = new Date(item.due);
+      const isOverdue = dueDate < currentDate && !item.isDone;
+
+      return {...item, isOverdue}
+    });
   },
 
   getByState(state) {
@@ -17,7 +29,7 @@ export const taskStore = {
         data = this.tasks.value.filter((item) => {
           const dueDateTime = new Date(item.due);
           const formattedDate = dueDateTime.toISOString().substring(0,10);
-          return formattedDate === currentDate && !item.isDone;
+          return currentDate >= formattedDate && !item.isDone;
         });
         break;
       case 'upcoming':
